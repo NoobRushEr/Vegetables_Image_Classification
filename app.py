@@ -76,8 +76,8 @@ def main():
 
     score = tf.nn.softmax(predict)
 
-    st.write(
-        "Veg/Fruit in image is {} with accuracy of {:0.2f}".format(
+    st.subheader(
+        "Veg/Fruit in image is {} with {:0.2f}% Accuracy.".format(
             data_cat[np.argmax(score)], np.max(score) * 100
         )
     )
