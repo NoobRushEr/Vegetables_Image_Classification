@@ -3,6 +3,9 @@ from tensorflow import keras
 from tensorflow.keras.models import load_model
 import streamlit as st
 import numpy as np
+import pandas as pd
+from PIL import Image
+import io
 
 data_cat = [
     "apple",
@@ -46,10 +49,24 @@ data_cat = [
 model = load_model("Image_classify.keras")
 
 def main():
+    st.set_page_config(
+        page_title="Vegetables Image Classification",
+        page_icon="vegetable",
+    )
+
     st.header('Vegetables Image Classification')
     img_width = 180
     img_height = 180
-    image = st.text_input('Enter Image', 'data/prediction/pepper.jpeg')
+
+
+    label = "Select an image"
+    image = st.file_uploader(label, type=['jpg', 'png', 'jpeg'], accept_multiple_files=False, key=None, help=None, on_change=None)
+    if image is not None:
+        img = Image.open(image)
+        st.image(img, width=200)
+    else:
+        image = "default.jpg"
+        st.image(image, width=200)
 
     image_load = tf.keras.utils.load_img(image, target_size=(img_width, img_height))
     img_arr = tf.keras.utils.array_to_img(image_load)
@@ -59,7 +76,6 @@ def main():
 
     score = tf.nn.softmax(predict)
 
-    st.image(image, width=200)
     st.write(
         "Veg/Fruit in image is {} with accuracy of {:0.2f}".format(
             data_cat[np.argmax(score)], np.max(score) * 100
